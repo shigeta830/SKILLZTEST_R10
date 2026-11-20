@@ -1,4 +1,4 @@
-from pyscript import display, document
+ from pyscript import display, document, when
 
 non_metal = {
     "H": ("Hydrogen", "1", "1.008"),
@@ -20,18 +20,22 @@ non_metal = {
     "Rn": ("Radon", "86", "222")
 }
 
+# Tells you immediately when Python is ready!
+document.getElementById('Result').innerHTML = "Ready! Enter a symbol above."
+
+@when("click", "#search_btn")
 def show_element(e):
     document.getElementById('Result').innerHTML = " "
     element1 = document.getElementById('element_input').value.strip().title()
 
-    info = non_metal.get(
+    name, atomic_num, atomic_mass = non_metal.get(
         element1,
         ("Element not found", " ", " ")
     )
 
     document.getElementById('Result').innerHTML = f"""
     <b>Symbol:</b> {element1} <br>
-    <b>Element:</b> {info[0]} <br>
-    <b>Atomic Number:</b> {info[1]} <br>
-    <b>Atomic Mass:</b> {info[2]}
+    <b>Element:</b> {name} <br>
+    <b>Atomic Number:</b> {atomic_num} <br>
+    <b>Atomic Mass:</b> {atomic_mass}
     """
