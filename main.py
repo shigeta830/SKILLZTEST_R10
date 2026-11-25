@@ -1,4 +1,4 @@
-from pyscript import document, when
+ from pyscript import document, when
 
 non_metal = {
     "H": ("Hydrogen", "1", "1.008"),
@@ -22,12 +22,13 @@ non_metal = {
 
 document.getElementById("Result").innerHTML = "Ready! Enter a symbol above."
 
+
 @when("click", "#search_btn")
-def show_element(event):
+def show_element(e):
     symbol = document.getElementById("element_input").value.strip().capitalize()
     name, atomic_num, atomic_mass = non_metal.get(
         symbol,
-        ("Element not found", "-", "-")
+        ("Element not found", "-", "-"),
     )
     document.getElementById("Result").innerHTML = f"""
     <b>Symbol:</b> {symbol} <br>
