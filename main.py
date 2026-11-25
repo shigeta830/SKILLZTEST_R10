@@ -1,41 +1,57 @@
- from pyscript import display, document, when
+ from pyscript import document, when
 
-non_metal = {
-    "H": ("Hydrogen", "1", "1.008"),
-    "He": ("Helium", "2", "4.003"),
-    "C": ("Carbon", "6", "12.011"),
-    "N": ("Nitrogen", "7", "14.007"),
-    "O": ("Oxygen", "8", "15.999"),
-    "F": ("Fluorine", "9", "18.998"),
-    "Ne": ("Neon", "10", "20.180"),
-    "P": ("Phosphorus", "15", "30.974"),
-    "S": ("Sulfur", "16", "32.06"),
-    "Cl": ("Chlorine", "17", "35.45"),
-    "Ar": ("Argon", "18", "39.948"),
-    "Se": ("Selenium", "34", "78.971"),
-    "Br": ("Bromine", "35", "79.904"),
-    "Kr": ("Krypton", "36", "83.798"),
-    "I": ("Iodine", "53", "126.90"),
-    "Xe": ("Xenon", "54", "131.29"),
-    "Rn": ("Radon", "86", "222")
-}
+CLUB_MEMBERS = [
+    "bong bong marcos",
+    "ethan de leon",
+    "spider man",
+    "jose rizal",
+    "ibbara",
+]
 
-# Tells you immediately when Python is ready!
-document.getElementById('Result').innerHTML = "Ready! Enter a symbol above."
 
-@when("click", "#search_btn")
- show_element(e):
-    document.getElementById('Result').innerHTML = " "
-    element1 = document.getElementById('element_input').value.strip().title()
+def set_status(message, state="neutral"):
+    box = document.getElementById("result")
+    box.className = "status-screen"
+    if state == "granted":
+        box.classList.add("status-granted")
+    elif state == "denied":
+        box.classList.add("status-denied")
+    box.innerHTML = message
 
-    name, atomic_num, atomic_mass = non_metal.get(
-        element1,
-        ("Element not found", " ", " ")
-    )
 
-    document.getElementById('Result').innerHTML = f"""
-    <b>Symbol:</b> {element1} <br>
-    <b>Element:</b> {name} <br>
-    <b>Atomic Number:</b> {atomic_num} <br>
-    <b>Atomic Mass:</b> {atomic_mass}
-    """
+@when("click", "#enter_btn")
+def candidate_checker(event):
+    f_name = document.getElementById("first_name").value.strip()
+    l_name = document.getElementById("last_name").value.strip()
+    candidate = f"{f_name} {l_name}".strip()
+
+    if not candidate:
+        set_status("WARNING: ENTER PLAYER NAME FIRST.", "denied")
+        return
+
+    is_member = candidate.lower() in CLUB_MEMBERS
+    if is_member:
+        set_status(
+            f"ACCESS GRANTED // WELCOME, {candidate.upper()}!",
+            "granted",
+        )
+    else:
+        set_status(
+            f"ACCESS DENIED // {candidate.upper()} IS NOT ON THE ROSTER.",
+            "denied",
+        )
+
+
+@when("click", "#reset_btn")
+def reset_menu(event):
+    document.getElementById("first_name").value = ""
+    document.getElementById("last_name").value = ""
+    set_status("AWAITING PLAYER INPUT...", "neutral")
+
+
+@when("click", ".preset-btn")
+def load_preset(event):
+    btn = event.currentTarget
+    document.getElementById("first_name").value = btn.getAttribute("data-first") or ""
+    document.getElementById("last_name").value = btn.getAttribute("data-last") or ""
+    candidate_checker(event)
