@@ -24,7 +24,7 @@ non_metal = {
 document.getElementById('Result').innerHTML = "Ready! Enter a symbol above."
 
 @when("click", "#search_btn")
-def show_element(e):
+ show_element(e):
     document.getElementById('Result').innerHTML = " "
     element1 = document.getElementById('element_input').value.strip().title()
 
